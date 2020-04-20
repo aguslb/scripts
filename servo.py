@@ -2,11 +2,12 @@ import RPi.GPIO as GPIO
 import time
 
 def showSleep (howLong, led ) :
-    while howLong > 0 :
-        GPIO.output(led,True)
-        time.sleep(1)
+    totalTime = howLong/2
+    while totalTime > 0 :
         GPIO.output(led,False)
-        howLong -= 1
+        time.sleep(2)
+        GPIO.output(led,True)
+        totalTime -= 1
 def finalize (workingTimes, p) :
     print (str(workingTimes) + '<-- times runned :)', end='\r')
     p.stop()
