@@ -1,43 +1,45 @@
 import RPi.GPIO as GPIO
 import time
 
-#def printSleep (howLong) :
-#  arrow = '-->'
-#  once = False
-#  while howLong > 0 :
-#    if once == False and howLong <= 10 :
-#      arrow = '--->'
-#      once = True
-#    time.sleep(1)
-#    howLong -= 1
-#    print (arrow + str(howLong), end='\r')
+def showSleep (howLong, led ) :
+    howLong = howLong * 4
+    while howLong > 0 :
+        GPIO.output(led,GPIO.HIGH)
+        time.sleep(0.125)
+        GPIO.output(led,GPIO.LOW)
+        time.sleep(0.125)
+        howLong -= 1
+def finalize (workingTimes, p, initPosition) :
+    p.ChangeDutyCycle(initPosition)
+    p.stop()
+    GPIO.cleanup()
+
 #Default Settings
 initPosition = 12
 finalPosition = 9
 slShort = 1
 slLong = 100
 gpiOutput = 11
-gpiLEDOut = 13
-workingTimes = 0
+gpiLedGreen = 13
+gpiLedRed = 15
+workingTimes = 600
 #Setting GPIO and servo config
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(gpiOutput, GPIO.OUT)
 p = GPIO.PWM(gpiOutput, 50)
 p.start(initPosition)
 #Setting GPIO led
-GPIO.setup(gpiLEDOut, GPIO.OUT)
+GPIO.setup(gpiLedGreen, GPIO.OUT, initial=GPIO.LOW)
+GPIO.setup(gpiLedRed, GPIO.OUT, initial=GPIO.LOW)
+
 #Runtine
 try:
-    while True:
+    while workingTimes > 0:
         p.ChangeDutyCycle(initPosition)
-        GPIO.output(gpiLEDOut,True)
-        time.sleep(slLong)
+        showSleep(slLong,gpiLedGreen)
         p.ChangeDutyCycle(finalPosition)
-        GPIO.output(gpiLEDOut,False)
-        time.sleep(slShort)
-        workingTimes += 1
-        print (str(workingTimes) + '<-- times runned :)', end='\r')
-except KeyboardInterrupt:
-    p.stop()
-    GPIO.cleanup()
-
+        showSleep(slShort,gpiLedRed)
+        workingTimes -= 1
+except (KeyboardInterrupt, OSError):
+    finalize(workingTimes,p,initPosition)
+finalize(workingTimes,p,initPosition)
