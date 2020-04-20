@@ -7,6 +7,11 @@ def showSleep (howLong, led ) :
         time.sleep(1)
         GPIO.output(led,False)
         howLong -= 1
+def finalize (workingTimes, p) :
+    print (str(workingTimes) + '<-- times runned :)', end='\r')
+    p.stop()
+    GPIO.cleanup()
+
 #Default Settings
 initPosition = 12
 finalPosition = 9
@@ -27,14 +32,12 @@ GPIO.setup(gpiLedIdle, GPIO.OUT)
 
 #Runtine
 try:
-    while True:
+    while workingTimes < 600:
         p.ChangeDutyCycle(initPosition)
         showSleep(slLong,gpiLEDWork)
         p.ChangeDutyCycle(finalPosition)
         showSleep(slShort,gpiLedIdle)
         workingTimes += 1
-except KeyboardInterrupt:
-    print (str(workingTimes) + '<-- times runned :)', end='\r')
-    p.stop()
-    GPIO.cleanup()
-
+except (KeyboardInterrupt, OSError):
+    finalize(workingTimes,p)
+finalize(workingTimes,p)
