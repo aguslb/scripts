@@ -18,11 +18,11 @@ def finalize (workingTimes, p, initPosition) :
 initPosition = 12
 finalPosition = 9
 slShort = 1
-slLong = 100
+slLong = 99
 gpiOutput = 11
 gpiLedGreen = 13
 gpiLedRed = 15
-workingTimes = 400
+workingTimes = 300
 #Setting GPIO and servo config
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(gpiOutput, GPIO.OUT)
