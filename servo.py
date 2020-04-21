@@ -22,7 +22,7 @@ slLong = 100
 gpiOutput = 11
 gpiLedGreen = 13
 gpiLedRed = 15
-workingTimes = 600
+workingTimes = 400
 #Setting GPIO and servo config
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(gpiOutput, GPIO.OUT)
